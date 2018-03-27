@@ -3,6 +3,9 @@
 ## Purpose
 This API should be used to check if a Minecraft skin matches against a defined palette. This is highly beneficial for palette contests on PMC (official/unofficial).
 
+#### Example Site
+[Palette Checker Website](https://github.com/Zitzabis/palette_checker)
+
 ## Endpoints
 
 ### Match: 
