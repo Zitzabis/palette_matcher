@@ -24,6 +24,12 @@ func main() {
 	// Setup router
 	r := gin.Default()
 
+	// Allow all orgins
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Next()
+	})
+
 	// Simple group: v1
 	paletteMatcher := r.Group("/api/palette_matcher")
 	{
