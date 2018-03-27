@@ -16,7 +16,7 @@ import (
 
 // Data struct to hold JSON data
 type Data struct {
-	Hexs []string `binding:"required"`
+	hexs []string `binding:"required"`
 	URL  string   `binding:"required"`
 }
 
@@ -192,7 +192,7 @@ func checkExtra(info *Data, img image.Image) bool {
 }
 
 func contains(info *Data, str string) bool {
-	for _, code := range info.Hexs {
+	for _, code := range info.hexs {
 		if code == str || str == "000" {
 			return true
 		}
