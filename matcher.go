@@ -73,19 +73,23 @@ func countColors() {
 }
 
 func checkStandard(info *Data, img image.Image) bool {
+	count := 0
 	// Head
 	for y := 0; y < 8; y++ {
+		// Jumps blank spaces
 		for x := 8; x < 24; x++ {
 			if !contains(info, colorAt(img, x, y)) {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
+			count++
 		}
 		for x := 40; x < 56; x++ {
 			if !contains(info, colorAt(img, x, y)) {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
+			count++
 		}
 	}
 	for y := 8; y < 16; y++ {
@@ -94,8 +98,45 @@ func checkStandard(info *Data, img image.Image) bool {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
+			count++
 		}
 	}
+
+	// Legs, Body, Arms
+	for y := 16; y < 20; y++ {
+		// Jumps blank spaces
+		for x := 4; x < 12; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+			count++
+		}
+		for x := 20; x < 36; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+			count++
+		}
+		for x := 44; x < 52; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+			count++
+		}
+	}
+	for y := 20; y < 32; y++ {
+		for x := 0; x < 56; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+			count++
+		}
+	}
+	fmt.Println("Total pixels checked: ", count)
 	return true
 }
 
