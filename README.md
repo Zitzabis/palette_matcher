@@ -6,7 +6,7 @@ This API should be used to check if a Minecraft skin matches against a defined p
 ## Endpoints
 
 ### Match: 
-`/api/palette_matcher/match`
+`http://api.zitzasoft.com/api/palette_matcher/match`
 
 The `match` endpoint is the primary API endpoint. It's return data will appear as a boolean:
 ```json
