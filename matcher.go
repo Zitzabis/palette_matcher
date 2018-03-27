@@ -16,7 +16,7 @@ import (
 
 // Data struct to hold JSON data
 type Data struct {
-	hexs []string `binding:"required"`
+	Hexs []string `binding:"required"`
 	URL  string   `binding:"required"`
 }
 
@@ -34,6 +34,8 @@ func main() {
 				c.AbortWithError(400, err)
 				return
 			}
+			fmt.Println(data.Hexs)
+			fmt.Println(data.URL)
 			match := checkMatch(data)
 			c.JSON(200, gin.H{
 				"match": match, // Was the image matched with only colors provided
@@ -192,7 +194,7 @@ func checkExtra(info *Data, img image.Image) bool {
 }
 
 func contains(info *Data, str string) bool {
-	for _, code := range info.hexs {
+	for _, code := range info.Hexs {
 		if code == str || str == "000" {
 			return true
 		}
