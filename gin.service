@@ -1,0 +1,10 @@
+[Unit]
+Description=Gin Router
+# Customize this^
+
+[Service]
+# Customize this^
+ExecStart=/root/Go/matcher/matcher
+
+[Install]
+WantedBy=multi-user.target

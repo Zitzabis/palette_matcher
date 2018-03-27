@@ -8,7 +8,7 @@ This API should be used to check if a Minecraft skin matches against a defined p
 
 ## Endpoints
 
-### Match: 
+### Match (POST):
 `http://api.zitzasoft.com/api/palette_matcher/match`
 
 The `match` endpoint is the primary API endpoint. It's return data will appear as a boolean:
@@ -27,6 +27,11 @@ Below is an example of JSON data that can be sent via POST.
 ```
 - Any number of hex codes can be submitted.
 - The URL must be a direct link.
+
+## Headers
+`Content-Type:application/json`
+
+JSON content type headers should be used for all endpoints.
 
 
 ## Speed
