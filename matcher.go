@@ -36,15 +36,7 @@ func main() {
 			}
 			match := checkMatch(data)
 			c.JSON(200, gin.H{
-				"isMatch":   match, // Was the image matched with only colors provided
-				"numColors": 5,     // How many colors exist (this can be used a verification)
-			})
-		})
-
-		paletteMatcher.GET("/exampleData", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"isMatch":   true,
-				"numColors": 5,
+				"match": match, // Was the image matched with only colors provided
 			})
 		})
 	}
@@ -63,17 +55,14 @@ func checkMatch(info *Data) bool {
 		return false
 	}
 	if dim.Max.Y == 64 {
-		checkExtra()
+		if !checkExtra(info, image) {
+			return false
+		}
 	}
 	return true
 }
 
-func countColors() {
-
-}
-
 func checkStandard(info *Data, img image.Image) bool {
-	count := 0
 	// Head
 	for y := 0; y < 8; y++ {
 		// Jumps blank spaces
@@ -82,14 +71,12 @@ func checkStandard(info *Data, img image.Image) bool {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
-			count++
 		}
 		for x := 40; x < 56; x++ {
 			if !contains(info, colorAt(img, x, y)) {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
-			count++
 		}
 	}
 	for y := 8; y < 16; y++ {
@@ -98,7 +85,6 @@ func checkStandard(info *Data, img image.Image) bool {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
-			count++
 		}
 	}
 
@@ -110,21 +96,18 @@ func checkStandard(info *Data, img image.Image) bool {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
-			count++
 		}
 		for x := 20; x < 36; x++ {
 			if !contains(info, colorAt(img, x, y)) {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
-			count++
 		}
 		for x := 44; x < 52; x++ {
 			if !contains(info, colorAt(img, x, y)) {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
-			count++
 		}
 	}
 	for y := 20; y < 32; y++ {
@@ -133,15 +116,79 @@ func checkStandard(info *Data, img image.Image) bool {
 				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
 				return false
 			}
-			count++
 		}
 	}
-	fmt.Println("Total pixels checked: ", count)
 	return true
 }
 
-func checkExtra() {
-
+func checkExtra(info *Data, img image.Image) bool {
+	// Right Legs/Arms, Body
+	for y := 32; y < 36; y++ {
+		// Jumps blank spaces
+		for x := 4; x < 12; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+		for x := 20; x < 36; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+		for x := 44; x < 52; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+	}
+	for y := 36; y < 48; y++ {
+		for x := 0; x < 56; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+	}
+	// Left Legs/Arms
+	for y := 48; y < 52; y++ {
+		// Jumps blank spaces
+		for x := 4; x < 12; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+		for x := 20; x < 28; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+		for x := 36; x < 44; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+		for x := 52; x < 60; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+	}
+	for y := 52; y < 64; y++ {
+		for x := 0; x < 64; x++ {
+			if !contains(info, colorAt(img, x, y)) {
+				fmt.Println("Error at ", x, ", ", y, " - ", colorAt(img, x, y))
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func contains(info *Data, str string) bool {
@@ -157,7 +204,7 @@ func downloadData(url string) image.Image {
 	// don't worry about errors
 	response, e := http.Get(url)
 	if e != nil {
-		log.Fatal(e)
+		log.Println(e)
 	}
 
 	defer response.Body.Close()
@@ -166,21 +213,20 @@ func downloadData(url string) image.Image {
 	path := path.Base(url)
 	writeFile, err := os.Create(path)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	// Use io.Copy to just dump the response body to the file. This supports huge files
 	_, err = io.Copy(writeFile, response.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	writeFile.Close()
-	fmt.Println("Downloaded and saved!")
 
 	reader, _ := os.Open(path)
 	defer reader.Close()
 	im, _, err := image.Decode(reader)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	err = os.Remove(path)
 	if err != nil {
